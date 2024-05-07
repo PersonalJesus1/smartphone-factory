@@ -1,14 +1,17 @@
 import java.time.LocalDateTime;
 
 public class Order {
-    private static LocalDateTime dataTimeOfOrder;
-    private String statusOfOrder; //Reference for the future: Order has been created, in work, has been done
+
+    private LocalDateTime dataTimeOfOrder;
+    private Status statusOfOrder;
     private Smartphone smartphone;
-    private static int quatityOfSmartphones;
-    public  void setDataTimeOfOrder(LocalDateTime dataTimeOfOrder) {
+    private int quatityOfSmartphones;
+
+    public void setDataTimeOfOrder(LocalDateTime dataTimeOfOrder) {
         this.dataTimeOfOrder = dataTimeOfOrder;
     }
-    public void setStatusOfOrder(String statusOfOrder) {
+
+    public void setStatusOfOrder(Status statusOfOrder) {
         this.statusOfOrder = statusOfOrder;
     }
 
@@ -16,15 +19,15 @@ public class Order {
         this.smartphone = smartphone;
     }
 
-    public  void setQuatityOfSmartphones(int quatityOfSmartphones) {
+    public void setQuatityOfSmartphones(int quatityOfSmartphones) {
         this.quatityOfSmartphones = quatityOfSmartphones;
     }
 
-    public static LocalDateTime getDataTimeOfOrder() {
+    public LocalDateTime getDataTimeOfOrder() {
         return dataTimeOfOrder;
     }
 
-    public String getStatusOfOrder() {
+    public Status getStatusOfOrder() {
         return statusOfOrder;
     }
 
@@ -32,19 +35,18 @@ public class Order {
         return smartphone;
     }
 
-    public static int getQuatityOfSmartphones() {
+    public int getQuatityOfSmartphones() {
         return quatityOfSmartphones;
     }
 
 
-    public Order(LocalDateTime dataTimeOfOrder, String statusOfOrder, Smartphone smartphone, int quatityOfSmartphones) {
+    public Order(LocalDateTime dataTimeOfOrder, Status statusOfOrder, Smartphone smartphone, int quatityOfSmartphones) {
         this.dataTimeOfOrder = dataTimeOfOrder;
         this.statusOfOrder = statusOfOrder;
         this.smartphone = smartphone;
         this.quatityOfSmartphones = quatityOfSmartphones;
     }
 
-
-    }
+}
 
 
