@@ -1,6 +1,10 @@
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import static java.lang.Thread.sleep;
 
 
 public class SmartphoneFactory extends Thread {
@@ -12,13 +16,13 @@ public class SmartphoneFactory extends Thread {
         }
     });
 
-    private int availableProcessors;
+    private static int availableProcessors = Runtime.getRuntime().availableProcessors();
 
     public void setAvailableProcessors(int availableProcessors) {
         this.availableProcessors = availableProcessors;
     }
 
-    public int getAvailableProcessors() {
+    public static int getAvailableProcessors() {
         return availableProcessors;
     }
 
@@ -27,23 +31,44 @@ public class SmartphoneFactory extends Thread {
     }
 
     public static void makeOrder() {
-        if (queueOfOrders.size() == 1) {
+        if (SmartphoneFactory.queueOfOrders.size() == 1) {
             produce();
         }
     }
 
-    public static Smartphone produce() {
+    public static void produce() {
         queueOfOrders.peek().setStatusOfOrder(Status.CREATING);
-        Smartphone producedSmartphone = queueOfOrders.peek().getSmartphone();
         int quatity = queueOfOrders.peek().getQuatityOfSmartphones();
+        ArrayList<Smartphone> listSmartphones = new ArrayList<>();
         System.out.println("Your order is producing.");
-        while (quatity > 0) {
-            try {
-                sleep(1000);
-                quatity--;
-            } catch (InterruptedException e) {
-                System.out.println("Something went wrong");
+
+        // Creating the list of the tasks
+        List<Callable<Smartphone>> taskList = new ArrayList<>();
+        for (int i = 1; i <= quatity; i++) {
+            taskList.add(() -> {
+                // process of producing
+                Smartphone producedSmartphone = SmartphoneFactory.queueOfOrders.peek().getSmartphone();
+                sleep(2000);
+                return producedSmartphone;
+            });
+        }
+
+        try {
+            // Sending all tasks to the executorService with threads and getting back list of Future objects
+            List<Future<Smartphone>> futures = Application.executorService.invokeAll(taskList);
+
+            // Reforming Future objects to Smartphone
+            for (Future<Smartphone> future : futures) {
+
+                try {
+                    Smartphone newSmartphone = future.get();
+                    listSmartphones.add(newSmartphone);
+                } catch (InterruptedException | ExecutionException e) {
+                    e.printStackTrace();
+                }
             }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
         queueOfOrders.peek().setStatusOfOrder(Status.TERMINATED);
         LocalDateTime dateTmeOfProduced = LocalDateTime.now();
@@ -51,7 +76,6 @@ public class SmartphoneFactory extends Thread {
                 " with quantity " + queueOfOrders.peek().getQuatityOfSmartphones()
                 + " has been done on " + dateTmeOfProduced.format(DateTimeFormatter.ofPattern("dd.MM.yyyy hh:mm")));
         queueOfOrders.poll();
-        return producedSmartphone;
     }
 
 }

@@ -2,9 +2,13 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.time.LocalDateTime;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class Application {
     public final static BufferedReader READER = new BufferedReader(new InputStreamReader(System.in));
+    static SmartphoneFactory smartphoneFactory = new SmartphoneFactory(SmartphoneFactory.getAvailableProcessors());
+    static ExecutorService executorService = Executors.newFixedThreadPool(SmartphoneFactory.getAvailableProcessors());
 
     public static void choiceOfOrder() throws IOException {
 
@@ -56,8 +60,7 @@ public class Application {
         System.out.println("Currently your order is in the queue, please stand by.");
     }
 
-    public static void main(String[] args) throws IOException, InterruptedException {
-        SmartphoneFactory smartphoneFactory = new SmartphoneFactory(Runtime.getRuntime().availableProcessors());
+    public static void main(String[] args) {
 
         try (READER) {
             int choice;
@@ -66,10 +69,14 @@ public class Application {
                 choice = Integer.parseInt(READER.readLine());
                 if (choice == 1) {
                     choiceOfOrder(); //get information,add to queue
-                    smartphoneFactory.makeOrder(); //check the queue, produce
-                    smartphoneFactory.join();
-                } else if (choice == 0) break;
+                    executorService.submit(() -> smartphoneFactory.makeOrder()); //check the queue, produce
+                } else if (choice == 0) {
+                    executorService.shutdown();
+                    break;
+                }
             } while (choice != 0);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 }
