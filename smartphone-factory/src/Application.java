@@ -2,20 +2,18 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.time.LocalDateTime;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+
 
 public class Application {
     public final static BufferedReader READER = new BufferedReader(new InputStreamReader(System.in));
-    static SmartphoneFactory smartphoneFactory = new SmartphoneFactory(SmartphoneFactory.getAvailableProcessors());
-    static ExecutorService executorService = Executors.newFixedThreadPool(SmartphoneFactory.getAvailableProcessors());
 
     public static void choiceOfOrder() throws IOException {
 
         LocalDateTime dataTimeOfOrder = LocalDateTime.now();
         int quatityOfSmartphones = 0;
-        String nameOfSmartphone = null;
+        String nameOfSmartphone;
         String modelOfSmartphone;
+        String screenSize;
         int volumeMemory = 0;
         boolean isRight = false;
 
@@ -23,7 +21,7 @@ public class Application {
         do {
             try {
                 System.out.println("Write the quantity of smartphones");
-                quatityOfSmartphones = Integer.parseInt(Application.READER.readLine());
+                quatityOfSmartphones = Integer.parseInt(READER.readLine());
                 isRight = true;
             } catch (NumberFormatException e) {
                 System.out.println("You have written a wrong information. Try again.");
@@ -32,18 +30,18 @@ public class Application {
 
         //name of brand
         System.out.println("Write the name of the brand (for example: APPLE, SAMSUNG, GOOGLE, NOKIA, HONOR, ALCATEL or REALME)");
-        nameOfSmartphone = Application.READER.readLine().toUpperCase();
+        nameOfSmartphone = READER.readLine().toUpperCase();
 
         //model
         isRight = false;
         System.out.println("Write the model");
-        modelOfSmartphone = Application.READER.readLine();
+        modelOfSmartphone = READER.readLine();
 
         //volume of memory
         do {
             try {
                 System.out.println("Write the volume of memory (for example: 64, 128 or 256GB)");
-                volumeMemory = Integer.parseInt(Application.READER.readLine());
+                volumeMemory = Integer.parseInt(READER.readLine());
                 isRight = true;
             } catch (NumberFormatException e) {
                 System.out.println("You have written a wrong information. Try again.");
@@ -52,7 +50,7 @@ public class Application {
 
         //size of screen
         System.out.println("Write the screenSize (for example:480×800, 640×1136, 720×1280, 750×1334, 1080×1920 or 1440×2560)");
-        String screenSize = Application.READER.readLine();
+        screenSize = READER.readLine();
 
         //Add order to queue
         SmartphoneFactory.queueOfOrders.offer(new Order(dataTimeOfOrder, Status.CREATED,
@@ -61,6 +59,7 @@ public class Application {
     }
 
     public static void main(String[] args) {
+        SmartphoneFactory smartphoneFactory = new SmartphoneFactory(Runtime.getRuntime().availableProcessors());
 
         try (READER) {
             int choice;
@@ -69,9 +68,9 @@ public class Application {
                 choice = Integer.parseInt(READER.readLine());
                 if (choice == 1) {
                     choiceOfOrder(); //get information,add to queue
-                    executorService.submit(() -> smartphoneFactory.makeOrder()); //check the queue, produce
+                    smartphoneFactory.startProduction(); //check the queue, produce
                 } else if (choice == 0) {
-                    executorService.shutdown();
+                    smartphoneFactory.stopProduction();
                     break;
                 }
             } while (choice != 0);
@@ -80,4 +79,3 @@ public class Application {
         }
     }
 }
-
