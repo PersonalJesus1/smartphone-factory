@@ -1,3 +1,4 @@
+import Smartphones.Smartphone;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -63,7 +64,7 @@ public class SmartphoneFactory extends Thread {
             // Sending all tasks to the executorService with threads and getting back list of Future objects
             List<Future<Smartphone>> futures = executorService.invokeAll(taskList);
 
-            // Reforming Future objects to Smartphone
+            // Reforming Future objects to Smartphone.Smartphone
             for (Future<Smartphone> future : futures) {
 
                 try {

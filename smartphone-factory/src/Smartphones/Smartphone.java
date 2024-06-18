@@ -1,3 +1,5 @@
+package Smartphones;
+
 public class Smartphone {
     private String nameOfSmartphone;
     private String modelOfSmartphone;
