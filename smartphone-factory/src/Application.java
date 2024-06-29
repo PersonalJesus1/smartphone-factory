@@ -1,13 +1,28 @@
 import Smartphones.*;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
-
-public class Application {
+public class Application implements Subject {
     public final static BufferedReader READER = new BufferedReader(new InputStreamReader(System.in));
+    private List<Observer> observers = new ArrayList<>();
+    private String state;
+
+    static File fileOfResults = new File("fileOfResults.txt");
+    private static FileWriter fileWriter;
+
+    static {
+        try {
+            fileWriter = new FileWriter(fileOfResults, true);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static FileWriter getFileWriter() {
+        return fileWriter;
+    }
 
     public void choiceOfOrder() throws IOException {
         LocalDateTime dataTimeOfOrder = LocalDateTime.now();
@@ -25,21 +40,57 @@ public class Application {
             }
         } while (!isRight);
 
-       //Building Smartphones
-       SmartphoneBuilder builder = new RealSmartphoneBuilder();
-       SmartphoneDirector director = new SmartphoneDirector(builder);
-       director.constructSmartphone(READER);
-       Smartphone smartphone = director.getSmartphone();
+        //Building Smartphones
+        SmartphoneBuilder builder = new RealSmartphoneBuilder();
+        SmartphoneDirector director = new SmartphoneDirector(builder);
+        director.constructSmartphone(READER);
+        Smartphone smartphone = director.getSmartphone();
 
         //Add order to queue
-        SmartphoneFactory.queueOfOrders.offer(new Order(dataTimeOfOrder, Status.CREATED,smartphone, quatityOfSmartphones));
+        SmartphoneFactory.queueOfOrders.offer(new Order(dataTimeOfOrder, Status.CREATED, smartphone, quatityOfSmartphones));
         System.out.println("Currently your order is in the queue, please stand by.");
-
-
     }
+
+    //methods for subject
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
+        notifyObservers();
+    }
+
+    @Override
+    public void attach(Observer observer) {
+        observers.add(observer);
+    }
+
+    @Override
+    public void detach(Observer observer) {
+        observers.remove(observer);
+    }
+
+    @Override
+    public void notifyObservers() {
+        try {
+            for (Observer observer : observers) {
+                observer.update(state);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void sendFinalInfoOfOrder(String FinalInfoOfOrder) {
+        setState(FinalInfoOfOrder);
+    }
+
     public static void main(String[] args) throws IOException {
-        SmartphoneFactory smartphoneFactory = new SmartphoneFactory(Runtime.getRuntime().availableProcessors());
-        Application application = new Application();
+        Application application = new Application(); // subject
+        SmartphoneFactory smartphoneFactory = new SmartphoneFactory("SmartphoneFactory1", Runtime.getRuntime().availableProcessors(),
+                application); //observer
+        application.attach(smartphoneFactory);
         try (READER) {
             int choice;
             do {
@@ -51,6 +102,7 @@ public class Application {
                         smartphoneFactory.startProduction(); //check the queue, produce
                     } else if (choice == 0) {
                         smartphoneFactory.stopProduction();
+                        fileWriter.close();
                         break;
                     }
                 } catch (Exception e) {
