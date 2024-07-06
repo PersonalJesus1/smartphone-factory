@@ -2,6 +2,7 @@ import Smartphones.*;
 
 import java.io.*;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,9 +47,14 @@ public class Application implements Subject {
         SmartphoneDirector director = new SmartphoneDirector(builder);
         director.constructSmartphone(READER);
         Smartphone smartphone = director.getSmartphone();
+        Order MadeOrder=new Order(dataTimeOfOrder, Status.CREATED, smartphone, quatityOfSmartphones);
 
         //Add order to queue
-        SmartphoneFactory.queueOfOrders.offer(new Order(dataTimeOfOrder, Status.CREATED, smartphone, quatityOfSmartphones));
+        SmartphoneFactory.queueOfOrders.offer(MadeOrder);
+        String stateOfOrder = "Order of " + MadeOrder.getDataTimeOfOrder().format(DateTimeFormatter.ofPattern("dd.MM.yyyy hh:mm")) +
+                " with quantity " + MadeOrder.getQuatityOfSmartphones()
+                + " has been added to the queue " + LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd.MM.yyyy hh:mm"))+ " Status is: "+MadeOrder.getStatusOfOrder().getInfo();
+        sendFinalInfoOfOrder(stateOfOrder);
         System.out.println("Currently your order is in the queue, please stand by.");
     }
 

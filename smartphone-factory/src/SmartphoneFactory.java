@@ -58,6 +58,10 @@ public class SmartphoneFactory extends Thread implements Observer {
        Order orderToMake = queueOfOrders.peek();
        orderToMake.setStatusOfOrder(Status.CREATING);
         int quatity = orderToMake.getQuatityOfSmartphones();
+        String stateOfOrder = "Order of " + orderToMake.getDataTimeOfOrder().format(DateTimeFormatter.ofPattern("dd.MM.yyyy hh:mm")) +
+                " with quantity " + quatity
+                + " is producing " + LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd.MM.yyyy hh:mm"))+ " Status is: "+orderToMake.getStatusOfOrder().getInfo();
+        application.sendFinalInfoOfOrder(stateOfOrder);
         ArrayList<Smartphone> listSmartphones = new ArrayList<>();
         System.out.println("Your order is producing.");
 
@@ -92,7 +96,8 @@ public class SmartphoneFactory extends Thread implements Observer {
         orderToMake.setStatusOfOrder(Status.TERMINATED);
         String state = "Order of " + orderToMake.getDataTimeOfOrder().format(DateTimeFormatter.ofPattern("dd.MM.yyyy hh:mm")) +
                 " with quantity " + quatity
-                + " has been done on " + LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd.MM.yyyy hh:mm"));
+                + " has been done on " + LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd.MM.yyyy hh:mm"))+
+                " Status is: "+orderToMake.getStatusOfOrder().getInfo();
         application.sendFinalInfoOfOrder(state);
         queueOfOrders.poll();
     }
