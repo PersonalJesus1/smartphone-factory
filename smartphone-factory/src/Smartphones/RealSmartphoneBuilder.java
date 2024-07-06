@@ -8,19 +8,15 @@ import java.lang.annotation.Annotation;
 public class RealSmartphoneBuilder implements SmartphoneBuilder {
 
     private Smartphone smartphone;
-    int volumeMemory;
-    String screenSize;
-    String modelOfSmartphone;
-    String nameOfSmartphone;
-    Annotation annotationBudgetType;
-    static BufferedReader READER;
-
-    public RealSmartphoneBuilder() {
-    }
+    private int volumeMemory;
+    private String screenSize;
+    private String modelOfSmartphone;
+    private String nameOfSmartphone;
+    private BufferedReader reader;
 
     @Override
-    public void buildSmartphone(BufferedReader READER) throws IOException {
-        RealSmartphoneBuilder.READER = READER;
+    public void buildSmartphone(BufferedReader reader) throws IOException {
+        this.reader = reader;
         // choice of BudgetSmartphone, MidTierSmartphone, FlagshipSmartphone
         Class<? extends Annotation> categoryClass = chooseCategory();
         smartphone = chooseBudgetType(categoryClass);
@@ -32,14 +28,14 @@ public class RealSmartphoneBuilder implements SmartphoneBuilder {
     }
 
     // choice of BudgetSmartphone, MidTierSmartphone, FlagshipSmartphone
-    public static Class<? extends Annotation> chooseCategory() throws IOException {
+    public  Class<? extends Annotation> chooseCategory() throws IOException {
         int categoryChoice;
         boolean isRight = false;
 
         do {
             try {
                 System.out.println("Choose category (number) by the price: 1. Budget (up to 250£), 2. MidTier (up to 450£), 3. Flagship (up to 900£).");
-                categoryChoice = Integer.parseInt(READER.readLine());
+                categoryChoice = Integer.parseInt(reader.readLine());
                 switch (categoryChoice) {
                     case 1:
                         return BudgetSmartphone.class;
@@ -69,7 +65,7 @@ public class RealSmartphoneBuilder implements SmartphoneBuilder {
             do {
                 try {
                     System.out.println("Choose country-producer (number): 1. China, 2. India");
-                    int choiceOfType = Integer.parseInt(READER.readLine());
+                    int choiceOfType = Integer.parseInt(reader.readLine());
                     switch (choiceOfType) {
                         //China
                         case 1:
@@ -93,7 +89,7 @@ public class RealSmartphoneBuilder implements SmartphoneBuilder {
             do {
                 try {
                     System.out.println("Choose country-producer (number): 1. USA, 2. Korea");
-                    int choiceOfType = Integer.parseInt(READER.readLine());
+                    int choiceOfType = Integer.parseInt(reader.readLine());
                     switch (choiceOfType) {
                         //USA
                         case 1:
@@ -204,17 +200,17 @@ public class RealSmartphoneBuilder implements SmartphoneBuilder {
         return new Smartphone(nameOfSmartphone, modelOfSmartphone, volumeMemory, screenSize);
     }
 
-    public static String choiceOfChinaModel() throws IOException {
+    public  String choiceOfChinaModel() throws IOException {
         do {
             try {
                 System.out.println("Choose the model of the phone: 1.XIAOMI or 2.HONOR?");
-                int choiceOfModel = Integer.parseInt(READER.readLine());
+                int choiceOfModel = Integer.parseInt(reader.readLine());
                 switch (choiceOfModel) {
                     case (1): {
                         do {
                             try {
                                 System.out.println("Choose the model of XIAOMI: 1. XIAOMI Redmi 12 Smartphone (100£), 2. XIAOMI Redmi Note 13 (150£)");
-                                choiceOfModel = Integer.parseInt(READER.readLine());
+                                choiceOfModel = Integer.parseInt(reader.readLine());
                                 if (choiceOfModel == 1) {
                                     return "XIAOMI Redmi 12 Smartphone";
                                 } else if (choiceOfModel == 2) {
@@ -229,7 +225,7 @@ public class RealSmartphoneBuilder implements SmartphoneBuilder {
                         do {
                             try {
                                 System.out.println("Choose the model of HONOR: 1. HONOR X6a (100£), 2. HONOR 90 LITE (170£)");
-                                choiceOfModel = Integer.parseInt(READER.readLine());
+                                choiceOfModel = Integer.parseInt(reader.readLine());
                                 if (choiceOfModel == 1) {
                                     return "HONOR X6a";
                                 } else if (choiceOfModel == 2) {
@@ -248,11 +244,11 @@ public class RealSmartphoneBuilder implements SmartphoneBuilder {
         while (true);
     }
 
-    public static String choiceOfIndiaModel() {
+    public  String choiceOfIndiaModel() {
         do {
             try {
                 System.out.println("Choose the model of the phone: 1.Lava Blaze Pro (150£) or 2.Lava Yuva3 Pro (110£)?");
-                int choiceOfModel = Integer.parseInt(READER.readLine());
+                int choiceOfModel = Integer.parseInt(reader.readLine());
                 switch (choiceOfModel) {
                     case (1):
                         return "Lava Blaze Pro";
@@ -268,11 +264,11 @@ public class RealSmartphoneBuilder implements SmartphoneBuilder {
         } while (true);
     }
 
-    public static String choiceOfTaiModel() {
+    public  String choiceOfTaiModel() {
         do {
             try {
                 System.out.println("Choose the model of HTC: 1. HTC U23 Pro 5G (280£), 2. HTC Desire 22 Pro 5G (180£)");
-                int choiceOfModel = Integer.parseInt(READER.readLine());
+                int choiceOfModel = Integer.parseInt(reader.readLine());
                 if (choiceOfModel == 1) {
                     return "HTC U23 Pro 5G";
                 } else if (choiceOfModel == 2) {
@@ -284,17 +280,17 @@ public class RealSmartphoneBuilder implements SmartphoneBuilder {
         } while (true);
     }
 
-    public static String choiceOfUSAModel() throws IOException {
+    public  String choiceOfUSAModel() throws IOException {
         do {
             try {
                 System.out.println("Choose the model of the phone: 1.IPHONE or 2.GOOGLE?");
-                int choiceOfModel = Integer.parseInt(READER.readLine());
+                int choiceOfModel = Integer.parseInt(reader.readLine());
                 switch (choiceOfModel) {
                     case (1): {
                         do {
                             try {
                                 System.out.println("Choose the model of IPHONE: 1. IPHONE 14 (700£), 2. IPHONE 15 (800£)");
-                                choiceOfModel = Integer.parseInt(READER.readLine());
+                                choiceOfModel = Integer.parseInt(reader.readLine());
                                 if (choiceOfModel == 1) {
                                     return "IPHONE 14";
                                 } else if (choiceOfModel == 2) {
@@ -309,7 +305,7 @@ public class RealSmartphoneBuilder implements SmartphoneBuilder {
                         do {
                             try {
                                 System.out.println("Choose the model of GOOGLE: 1. GOOGLE Pixel 7 Pro(430£), 2. GOOGLE Pixel 8 Pro (500£)");
-                                choiceOfModel = Integer.parseInt(READER.readLine());
+                                choiceOfModel = Integer.parseInt(reader.readLine());
                                 if (choiceOfModel == 1) {
                                     return "GOOGLE Pixel 7 Pro";
                                 } else if (choiceOfModel == 2) {
@@ -327,11 +323,11 @@ public class RealSmartphoneBuilder implements SmartphoneBuilder {
         } while (true);
     }
 
-    public static String choiceOfKoreaModel() {
+    public  String choiceOfKoreaModel() {
         do {
             try {
                 System.out.println("Choose the model of SAMSUNG: 1.SAMSUNG Galaxy S23 Ultra (650£), 2.SAMSUNG Galaxy S24 Ultra (790£)");
-                int choiceOfModel = Integer.parseInt(READER.readLine());
+                int choiceOfModel = Integer.parseInt(reader.readLine());
                 if (choiceOfModel == 1) {
                     return "SAMSUNG Galaxy S23 Ultra";
                 } else if (choiceOfModel == 2) {

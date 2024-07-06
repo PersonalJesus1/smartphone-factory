@@ -90,9 +90,10 @@ public class SmartphoneFactory extends Thread implements Observer {
             e.printStackTrace();
         }
         orderToMake.setStatusOfOrder(Status.TERMINATED);
-        application.sendFinalInfoOfOrder("Order of " + orderToMake.getDataTimeOfOrder().format(DateTimeFormatter.ofPattern("dd.MM.yyyy hh:mm")) +
+        String state = "Order of " + orderToMake.getDataTimeOfOrder().format(DateTimeFormatter.ofPattern("dd.MM.yyyy hh:mm")) +
                 " with quantity " + quatity
-                + " has been done on " + LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd.MM.yyyy hh:mm")));
+                + " has been done on " + LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd.MM.yyyy hh:mm"));
+        application.sendFinalInfoOfOrder(state);
         queueOfOrders.poll();
     }
 }

@@ -10,8 +10,8 @@ public class SmartphoneDirector {
         this.smartphoneBuilder = smartphoneBuilder;
     }
 
-    public void constructSmartphone(BufferedReader READER) throws IOException {
-        smartphoneBuilder.buildSmartphone(READER);
+    public void constructSmartphone(BufferedReader reader) throws IOException {
+        smartphoneBuilder.buildSmartphone(reader);
     }
 
     public Smartphone getSmartphone() {
