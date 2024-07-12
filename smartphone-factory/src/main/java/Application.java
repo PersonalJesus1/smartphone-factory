@@ -1,4 +1,6 @@
-import Smartphones.*;
+package main.java;
+
+import main.java.Smartphones.*;
 
 import java.io.*;
 import java.time.LocalDateTime;
@@ -14,12 +16,24 @@ public class Application implements Subject {
     static File fileOfResults = new File("fileOfResults.txt");
     private static FileWriter fileWriter;
 
+    public static void setFileWriter(FileWriter fileWriter) {
+        Application.fileWriter = fileWriter;
+    }
+
     static {
         try {
             fileWriter = new FileWriter(fileOfResults, true);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public static File getFileOfResults() {
+        return fileOfResults;
+    }
+
+    public static void setFileOfResults(File fileOfResults) {
+        Application.fileOfResults = fileOfResults;
     }
 
     public static FileWriter getFileWriter() {
@@ -42,7 +56,7 @@ public class Application implements Subject {
             }
         } while (!isRight);
 
-        //Building Smartphones
+        //Building main.java.Smartphones
         SmartphoneBuilder builder = new RealSmartphoneBuilder();
         SmartphoneDirector director = new SmartphoneDirector(builder);
         director.constructSmartphone(READER);
@@ -51,9 +65,9 @@ public class Application implements Subject {
 
         //Add order to queue
         SmartphoneFactory.queueOfOrders.offer(MadeOrder);
-        String stateOfOrder = "Order of " + MadeOrder.getDataTimeOfOrder().format(DateTimeFormatter.ofPattern("dd.MM.yyyy hh:mm")) +
+        String stateOfOrder = "main.java.Order of " + MadeOrder.getDataTimeOfOrder().format(DateTimeFormatter.ofPattern("dd.MM.yyyy hh:mm")) +
                 " with quantity " + MadeOrder.getQuatityOfSmartphones()
-                + " has been added to the queue " + LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd.MM.yyyy hh:mm"))+ " Status is: "+MadeOrder.getStatusOfOrder().getInfo();
+                + " has been added to the queue " + LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd.MM.yyyy hh:mm"))+ " main.java.Status is: "+MadeOrder.getStatusOfOrder().getInfo();
         sendFinalInfoOfOrder(stateOfOrder);
         System.out.println("Currently your order is in the queue, please stand by.");
     }
@@ -118,4 +132,6 @@ public class Application implements Subject {
             } while (true);
         }
     }
+
+
 }
