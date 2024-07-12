@@ -1,4 +1,4 @@
-package Smartphones;
+package main.java.Smartphones;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

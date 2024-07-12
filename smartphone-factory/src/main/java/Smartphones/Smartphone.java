@@ -1,4 +1,4 @@
-package Smartphones;
+package main.java.Smartphones;
 
 public class Smartphone {
     private String nameOfSmartphone;
@@ -45,5 +45,11 @@ public class Smartphone {
         this.modelOfSmartphone = modelOfSmartphone;
         this.volumeMemory = volumeMemory;
         this.screenSize = screenSize;
+    }
+    public Smartphone() {
+        this.nameOfSmartphone = "nameOfSmartphone";
+        this.modelOfSmartphone = "modelOfSmartphone";
+        this.volumeMemory = 64;
+        this.screenSize = "screenSize";
     }
 }

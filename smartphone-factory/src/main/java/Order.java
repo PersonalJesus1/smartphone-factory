@@ -1,4 +1,6 @@
-import Smartphones.Smartphone;
+package main.java;
+
+import main.java.Smartphones.Smartphone;
 import java.time.LocalDateTime;
 
 public class Order {
